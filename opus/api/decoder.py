@@ -49,7 +49,10 @@ _packet_get_bandwidth.restype = ctypes.c_int
 def packet_get_bandwidth(data):
     """Gets the bandwidth of an Opus packet."""
 
-    data_pointer = ctypes.c_char_p(data)
+    try:
+        data_pointer = ctypes.c_char_p(data)
+    except TypeError:
+        data_pointer = ctypes.c_char_p(bytes(data.encode('latin-1')))
 
     result = _packet_get_bandwidth(data_pointer)
     if result < 0:
@@ -66,7 +69,10 @@ _packet_get_nb_channels.restype = ctypes.c_int
 def packet_get_nb_channels(data):
     """Gets the number of channels from an Opus packet"""
 
-    data_pointer = ctypes.c_char_p(data)
+    try:
+        data_pointer = ctypes.c_char_p(data)
+    except TypeError:
+        data_pointer = ctypes.c_char_p(bytes(data.encode('latin-1')))
 
     result = _packet_get_nb_channels(data_pointer)
     if result < 0:
@@ -83,7 +89,10 @@ _packet_get_nb_frames.restype = ctypes.c_int
 def packet_get_nb_frames(data, length=None):
     """Gets the number of frames in an Opus packet"""
 
-    data_pointer = ctypes.c_char_p(data)
+    try:
+        data_pointer = ctypes.c_char_p(data)
+    except TypeError:
+        data_pointer = ctypes.c_char_p(bytes(data.encode('latin-1')))
     if length is None:
         length = len(data)
 
@@ -102,7 +111,10 @@ _packet_get_samples_per_frame.restype = ctypes.c_int
 def packet_get_samples_per_frame(data, fs):
     """Gets the number of samples per frame from an Opus packet"""
 
-    data_pointer = ctypes.c_char_p(data)
+    try:
+        data_pointer = ctypes.c_char_p(data)
+    except TypeError:
+        data_pointer = ctypes.c_char_p(bytes(data.encode('latin-1')))
 
     result = _packet_get_nb_frames(data_pointer, ctypes.c_int(fs))
     if result < 0:
@@ -117,7 +129,10 @@ _get_nb_samples.restype = ctypes.c_int
 
 
 def get_nb_samples(decoder, packet, length):
-    result = _get_nb_samples(decoder, packet, length)
+    try:
+        result = _get_nb_samples(decoder, packet, length)
+    except ctypes.ArgumentError:
+        result = _get_nb_samples(decoder, bytes(packet.encode('latin-1')), length)
     if result < 0:
         raise OpusError(result)
 
@@ -143,11 +158,14 @@ def decode(decoder, data, length, frame_size, decode_fec, channels=2):
     # Converting from a boolean to int
     decode_fec = int(bool(decode_fec))
 
-    result = _decode(decoder, data, length, pcm_pointer, frame_size, decode_fec)
+    try:
+        result = _decode(decoder, data, length, pcm_pointer, frame_size, decode_fec)
+    except ctypes.ArgumentError:
+        result = _decode(decoder, bytes(data.encode('latin-1')), length, pcm_pointer, frame_size, decode_fec)
     if result < 0:
         raise OpusError(result)
 
-    return array.array('h', pcm).tostring()
+    return array.array('h', pcm[:result * channels]).tostring()
 
 
 _decode_float = libopus.opus_decode_float
@@ -163,11 +181,14 @@ def decode_float(decoder, data, length, frame_size, decode_fec, channels=2):
     # Converting from a boolean to int
     decode_fec = int(bool(decode_fec))
 
-    result = _decode_float(decoder, data, length, pcm_pointer, frame_size, decode_fec)
+    try:
+        result = _decode_float(decoder, data, length, pcm_pointer, frame_size, decode_fec)
+    except:
+        result = _decode_float(decoder, bytes(data.encode('latin-1')), length, pcm_pointer, frame_size, decode_fec)
     if result < 0:
         raise OpusError(result)
 
-    return array.array('f', pcm).tostring()
+    return array.array('f', pcm[:result * channels]).tostring()
 
 
 _ctl = libopus.opus_decoder_ctl
