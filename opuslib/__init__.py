@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests for opuslib."""
+"""Python bindings to the libopus, IETF low-delay audio codec"""
 
 __author__ = 'Никита Кузнецов <self@svartalf.info>'
 __copyright__ = 'Copyright (c) 2012, SvartalF'
