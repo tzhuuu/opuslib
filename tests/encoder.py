@@ -10,12 +10,12 @@ import ctypes
 import sys
 
 try:
-    import unittest2 as unittest # For Python<=2.6
+    import unittest2 as unittest  # For Python<=2.6
 except ImportError:
     import unittest
 
-from opus.api import encoder, constants, ctl
-from opus.exceptions import OpusError
+from opuslib.api import encoder, constants, ctl
+from opuslib.exceptions import OpusError
 
 
 class EncoderTest(unittest.TestCase):

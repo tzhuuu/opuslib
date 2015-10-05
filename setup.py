@@ -21,7 +21,7 @@ setuptools.setup(
     license='BSD 3-Clause License',
     url='https://github.com/onbeep/opuslib',
     description='Python bindings to the libopus, IETF low-delay audio codec',
-    packages=('opus', 'opus.api'),
+    packages=('opuslib', 'opuslib.api'),
     test_suite='tests',
     zip_safe=False,
     classifiers=(

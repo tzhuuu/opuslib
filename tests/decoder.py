@@ -9,12 +9,12 @@ __license__ = 'BSD 3-Clause License'
 import sys
 
 try:
-    import unittest2 as unittest # For Python<=2.6
+    import unittest2 as unittest  # For Python<=2.6
 except ImportError:
     import unittest
 
-from opus.api import decoder, constants, ctl
-from opus.exceptions import OpusError
+from opuslib.api import decoder, constants, ctl
+from opuslib.exceptions import OpusError
 
 
 class DecoderTest(unittest.TestCase):

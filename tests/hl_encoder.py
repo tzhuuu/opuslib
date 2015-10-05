@@ -10,9 +10,9 @@ __license__ = 'BSD 3-Clause License'
 
 import unittest
 
-from opus.encoder import Encoder
-from opus.exceptions import OpusError
-from opus.api import constants
+from opuslib.encoder import Encoder
+from opuslib.exceptions import OpusError
+from opuslib.api import constants
 
 
 class EncoderTest(unittest.TestCase):

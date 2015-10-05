@@ -16,7 +16,7 @@ from ctypes.util import find_library
 lib_location = find_library('opus')
 
 if lib_location is None:
-    raise FileNotFoundError(
+    raise Exception(
         'Could not find opus library. Make sure it is installed.')
 
 libopus = ctypes.CDLL(lib_location)
