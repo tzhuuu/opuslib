@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """CTL macros rewritten to Python
 
 Usage example:
@@ -9,6 +12,11 @@ Usage example:
     gain_value = decoder.ctl(dec, ctl.get_gain)
 
 """
+
+__author__ = 'Никита Кузнецов <self@svartalf.info>'
+__copyright__ = 'Copyright (c) 2012, SvartalF'
+__license__ = 'BSD 3-Clause License'
+
 
 import ctypes
 

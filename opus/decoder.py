@@ -1,4 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """High-level interface to a opus.api.decoder functions"""
+
+__author__ = 'Никита Кузнецов <self@svartalf.info>'
+__copyright__ = 'Copyright (c) 2012, SvartalF'
+__license__ = 'BSD 3-Clause License'
+
 
 from opus.api import decoder, ctl
 
