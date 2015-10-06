@@ -29,6 +29,9 @@ clean:
 		nosetests.xml pylint.log *.egg output.xml flake8.log tests.log \
 		test-result.xml htmlcov fab.log *.deb
 
+publish:
+	python setup.py register sdist upload
+
 nosetests:
 	python setup.py nosetests
 
