@@ -21,9 +21,9 @@ __copyright__ = 'Copyright (c) 2012, SvartalF'
 __license__ = 'BSD 3-Clause License'
 
 
-import logging
+import logging  # NOQA
 
-from .classes import Encoder, Decoder
+from .classes import Encoder, Decoder  # NOQA
 
 # Set default logging handler to avoid "No handler found" warnings.
 try:  # Python 2.7+

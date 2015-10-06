@@ -9,7 +9,6 @@ __license__ = 'BSD 3-Clause License'
 
 
 import opuslib
-from .api import constants
 
 
 APPLICATION_TYPES_MAP = {

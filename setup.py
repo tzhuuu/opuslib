@@ -8,7 +8,19 @@ __copyright__ = 'Copyright (c) 2012, SvartalF'
 __license__ = 'BSD 3-Clause License'
 
 
+import os
 import setuptools
+import sys
+
+
+def publish():
+    """Function for publishing package to pypi."""
+    if sys.argv[-1] == 'publish':
+        os.system('python setup.py sdist upload')
+        sys.exit()
+
+
+publish()
 
 
 setuptools.setup(
