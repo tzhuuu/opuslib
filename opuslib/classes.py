@@ -8,7 +8,9 @@ __copyright__ = 'Copyright (c) 2012, SvartalF'
 __license__ = 'BSD 3-Clause License'
 
 
-import opuslib.api
+import opuslib.api.decoder
+import opuslib.api.encoder
+import opuslib.api.ctl
 import opuslib.constants
 
 
@@ -115,7 +117,7 @@ class Encoder(object):
         Resets the codec state to be equivalent to a freshly initialized state
         """
 
-        opuslib.api.encoder.opuslib.api.ctl(
+        opuslib.api.encoder.ctl(
             self._state, opuslib.api.ctl.reset_state)
 
     def encode(self, data, frame_size):
@@ -128,127 +130,127 @@ class Encoder(object):
 
     # CTL interfaces
 
-    _get_final_range = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_final_range = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_final_range)
 
     final_range = property(_get_final_range)
 
-    _get_bandwidth = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_bandwidth = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_bandwidth)
 
     bandwidth = property(_get_bandwidth)
 
-    _get_pitch = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_pitch = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_pitch)
 
     pitch = property(_get_pitch)
 
-    _get_lsb_depth = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_lsb_depth = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_lsb_depth)
 
-    _set_lsb_depth = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_lsb_depth = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.set_lsb_depth, x)
 
     lsb_depth = property(_get_lsb_depth, _set_lsb_depth)
 
-    _get_complexity = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_complexity = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_complexity)
 
-    _set_complexity = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_complexity = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.set_complexity, x)
 
     complexity = property(_get_complexity, _set_complexity)
 
-    _get_bitrate = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_bitrate = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_bitrate)
 
-    _set_bitrate = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_bitrate = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.set_bitrate, x)
 
     bitrate = property(_get_bitrate, _set_bitrate)
 
-    _get_vbr = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_vbr = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_vbr)
 
-    _set_vbr = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_vbr = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.set_vbr, x)
 
     vbr = property(_get_vbr, _set_vbr)
 
-    _get_vbr_constraint = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_vbr_constraint = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_vbr_constraint)
 
-    _set_vbr_constraint = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_vbr_constraint = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.set_vbr_constraint, x)
 
     vbr_constraint = property(_get_vbr_constraint, _set_vbr_constraint)
 
-    _get_force_channels = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_force_channels = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_force_channels)
 
-    _set_force_channels = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_force_channels = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.set_force_channels, x)
 
     force_channels = property(_get_force_channels, _set_force_channels)
 
-    _get_max_bandwidth = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_max_bandwidth = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_max_bandwidth)
 
-    _set_max_bandwidth = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_max_bandwidth = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.set_max_bandwidth, x)
 
     max_bandwidth = property(_get_max_bandwidth, _set_max_bandwidth)
 
-    _set_bandwidth = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_bandwidth = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.set_bandwidth, x)
 
     bandwidth = property(None, _set_bandwidth)
 
-    _get_signal = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_signal = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_signal)
 
-    _set_signal = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_signal = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.set_signal, x)
 
     signal = property(_get_signal, _set_signal)
 
-    _get_application = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_application = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_application)
 
-    _set_application = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_application = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.set_application, x)
 
     application = property(_get_application, _set_application)
 
-    _get_sample_rate = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_sample_rate = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_sample_rate)
 
     sample_rate = property(_get_sample_rate)
 
-    _get_lookahead = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_lookahead = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_lookahead)
 
     lookahead = property(_get_lookahead)
 
-    _get_inband_fec = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_inband_fec = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_inband_fec)
 
-    _set_inband_fec = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_inband_fec = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.set_inband_fec)
 
     inband_fec = property(_get_inband_fec, _set_inband_fec)
 
-    _get_packet_loss_perc = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_packet_loss_perc = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_packet_loss_perc)
 
     _set_packet_loss_perc = \
-        lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+        lambda self, x: opuslib.api.encoder.ctl(
             self._state, opuslib.api.ctl.set_packet_loss_perc, x)
 
     packet_loss_perc = property(_get_packet_loss_perc, _set_packet_loss_perc)
 
-    _get_dtx = lambda self: opuslib.api.encoder.opuslib.api.ctl(
+    _get_dtx = lambda self: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_dtx)
 
-    _set_dtx = lambda self, x: opuslib.api.encoder.opuslib.api.ctl(
+    _set_dtx = lambda self, x: opuslib.api.encoder.ctl(
         self._state, opuslib.api.ctl.get_dtx, x)
