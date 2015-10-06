@@ -25,7 +25,7 @@ publish()
 
 setuptools.setup(
     name='opuslib',
-    version='1.0.0',
+    version='1.0.1',
     author='Никита Кузнецов',
     author_email='self@svartalf.info',
     maintainer='Orion Labs, Inc.',
