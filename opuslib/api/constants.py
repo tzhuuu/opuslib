@@ -17,11 +17,20 @@ BAD_ARG = -1
 # The mode struct passed is invalid
 BUFFER_TOO_SMALL = -2
 
+# An internal error was detected
+INTERNAL_ERROR = -3
+
 # The compressed data passed is corrupted
 INVALID_PACKET = -4
 
 # Invalid/unsupported request number
 UNIMPLEMENTED = -5
+
+# An encoder or decoder structure is invalid or already freed
+INVALID_STATE = -6
+
+# Memory allocation has failed
+ALLOC_FAIL = -7
 
 
 # Pre-defined values for CTL interface
@@ -30,6 +39,7 @@ APPLICATION_VOIP = 2048
 APPLICATION_AUDIO = 2049
 APPLICATION_RESTRICTED_LOWDELAY = 2051
 
+SIGNAL_VOICE = 3001
 SIGNAL_MUSIC = 3002
 
 # Values for the various encoder CTLs
@@ -64,9 +74,16 @@ GET_SAMPLE_RATE_REQUEST = 4029
 GET_FINAL_RANGE_REQUEST = 4031
 GET_PITCH_REQUEST = 4033
 SET_GAIN_REQUEST = 4034
-GET_GAIN_REQUEST = 4045
+GET_GAIN_REQUEST = 4045  # Should have been 4035
 SET_LSB_DEPTH_REQUEST = 4036
 GET_LSB_DEPTH_REQUEST = 4037
+GET_LAST_PACKET_DURATION_REQUEST = 4039
+SET_EXPERT_FRAME_DURATION_REQUEST = 4040
+GET_EXPERT_FRAME_DURATION_REQUEST = 4041
+SET_PREDICTION_DISABLED_REQUEST = 4042
+GET_PREDICTION_DISABLED_REQUEST = 4043
+
+# Don't use 4045, it's already taken by OPUS_GET_GAIN_REQUEST
 
 AUTO = -1000
 
