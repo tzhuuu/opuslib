@@ -53,8 +53,7 @@ def create(fs, channels, application):
 
     result = _create(fs, channels, application, ctypes.byref(result_code))
     if result_code.value is not opuslib.api.constants.OK:
-        raise opuslib.exceptions.OpusError(
-            "Encoder returned: %s" % result_code.value)
+        raise opuslib.exceptions.OpusError(result_code.value)
 
     return result
 
@@ -66,7 +65,6 @@ _ctl.restype = ctypes.c_int
 def ctl(encoder, request, value=None):
     if value is not None:
         return request(_ctl, encoder, value)
-
     return request(_ctl, encoder)
 
 
@@ -87,9 +85,9 @@ def encode(encoder, pcm, frame_size, max_data_bytes):
     data = (ctypes.c_char * max_data_bytes)()
 
     result = _encode(encoder, pcm, frame_size, data, max_data_bytes)
-    if result_code.value is not opuslib.api.constants.OK:
+    if result < 0:
         raise opuslib.exceptions.OpusError(
-            "Encoder returned: %s" % result_code.value)
+            "Encoder returned: %s" % result)
 
     return array.array('b', data[:result]).tostring()
 
@@ -108,9 +106,9 @@ def encode_float(encoder, pcm, frame_size, max_data_bytes):
     data = (ctypes.c_char * max_data_bytes)()
 
     result = _encode_float(encoder, pcm, frame_size, data, max_data_bytes)
-    if result_code.value is not opuslib.api.constants.OK:
+    if result < 0:
         raise opuslib.exceptions.OpusError(
-            "Encoder returned: %s" % result_code.value)
+            "Encoder returned: %s" % result)
 
     return array.array('b', data[:result]).tostring()
 

@@ -41,9 +41,8 @@ def create(fs, channels):
     result_code = ctypes.c_int()
 
     result = _create(fs, channels, ctypes.byref(result_code))
-    if result_code.value is not opuslib.api.constants.OK:
-        raise opuslib.exceptions.OpusError(
-            "Decoder returned: %s" % result_code.value)
+    if result_code.value is not 0:
+        raise opuslib.exceptions.OpusError(result_code.value)
 
     return result
 
@@ -62,9 +61,8 @@ def packet_get_bandwidth(data):
         data_pointer = ctypes.c_char_p(bytes(data.encode('latin-1')))
 
     result = _packet_get_bandwidth(data_pointer)
-    if result_code.value is not opuslib.api.constants.OK:
-        raise opuslib.exceptions.OpusError(
-            "Decoder returned: %s" % result_code.value)
+    if result < 0:
+        raise opuslib.exceptions.OpusError(result)
 
     return result
 
@@ -83,9 +81,8 @@ def packet_get_nb_channels(data):
         data_pointer = ctypes.c_char_p(bytes(data.encode('latin-1')))
 
     result = _packet_get_nb_channels(data_pointer)
-    if result_code.value is not opuslib.api.constants.OK:
-        raise opuslib.exceptions.OpusError(
-            "Decoder returned: %s" % result_code.value)
+    if result < 0:
+        raise opuslib.exceptions.OpusError(result)
 
     return result
 
@@ -106,9 +103,8 @@ def packet_get_nb_frames(data, length=None):
         length = len(data)
 
     result = _packet_get_nb_frames(data_pointer, ctypes.c_int(length))
-    if result_code.value is not opuslib.api.constants.OK:
-        raise opuslib.exceptions.OpusError(
-            "Decoder returned: %s" % result_code.value)
+    if result < 0:
+        raise opuslib.exceptions.OpusError(result)
 
     return result
 
@@ -128,9 +124,9 @@ def packet_get_samples_per_frame(data, fs):
         data_pointer = ctypes.c_char_p(bytes(data.encode('latin-1')))
 
     result = _packet_get_nb_frames(data_pointer, ctypes.c_int(fs))
-    if result_code.value is not opuslib.api.constants.OK:
-        raise opuslib.exceptions.OpusError(
-            "Decoder returned: %s" % result_code.value)
+    if result < 0:
+        raise opuslib.exceptions.OpusError(result)
+
     return result
 
 
@@ -145,9 +141,8 @@ def get_nb_samples(decoder, packet, length):
     except ctypes.ArgumentError:
         result = _get_nb_samples(
             decoder, bytes(packet.encode('latin-1')), length)
-    if result_code.value is not opuslib.api.constants.OK:
-        raise opuslib.exceptions.OpusError(
-            "Decoder returned: %s" % result_code.value)
+    if result < 0:
+        raise opuslib.exceptions.OpusError(result)
 
     return result
 
@@ -180,9 +175,8 @@ def decode(decoder, data, length, frame_size, decode_fec, channels=2):
         result = _decode(
             decoder, bytes(data.encode('latin-1')), length, pcm_pointer,
             frame_size, decode_fec)
-    if result_code.value is not opuslib.api.constants.OK:
-        raise opuslib.exceptions.OpusError(
-            "Decoder returned: %s" % result_code.value)
+    if result < 0:
+        raise opuslib.exceptions.OpusError(result)
 
     return array.array('h', pcm[:result * channels]).tostring()
 
@@ -209,9 +203,8 @@ def decode_float(decoder, data, length, frame_size, decode_fec, channels=2):
         result = _decode_float(
             decoder, bytes(data.encode('latin-1')), length, pcm_pointer,
             frame_size, decode_fec)
-    if result_code.value is not opuslib.api.constants.OK:
-        raise opuslib.exceptions.OpusError(
-            "Decoder returned: %s" % result_code.value)
+    if result < 0:
+        raise opuslib.exceptions.OpusError(result)
 
     return array.array('f', pcm[:result * channels]).tostring()
 
