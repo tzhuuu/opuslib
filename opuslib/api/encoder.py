@@ -7,7 +7,6 @@ __license__ = 'BSD 3-Clause License'
 
 
 import ctypes
-import array
 
 import opuslib.api
 import opuslib.api.constants
@@ -89,7 +88,7 @@ def encode(encoder, pcm, frame_size, max_data_bytes):
         raise opuslib.exceptions.OpusError(
             "Encoder returned: %s" % result)
 
-    return array.array('b', data[:result]).tostring()
+    return opuslib.api.Array('b', data[:result]).tobytes()
 
 
 _encode_float = opuslib.api.libopus.opus_encode_float
@@ -110,7 +109,7 @@ def encode_float(encoder, pcm, frame_size, max_data_bytes):
         raise opuslib.exceptions.OpusError(
             "Encoder returned: %s" % result)
 
-    return array.array('b', data[:result]).tostring()
+    return opuslib.api.Array('b', data[:result]).tobytes()
 
 
 destroy = opuslib.api.libopus.opus_encoder_destroy
