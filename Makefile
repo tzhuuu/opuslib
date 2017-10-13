@@ -37,7 +37,7 @@ clean:
 		test-result.xml htmlcov fab.log *.deb .coverage
 
 publish:
-	python setup.py register sdist upload
+	python setup.py publish
 
 nosetests: remember_test
 	python setup.py nosetests
