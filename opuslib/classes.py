@@ -3,15 +3,14 @@
 
 """High-level interface to a opus decoder functions"""
 
-__author__ = 'Никита Кузнецов <self@svartalf.info>'
-__copyright__ = 'Copyright (c) 2012, SvartalF'
-__license__ = 'BSD 3-Clause License'
-
-
 import opuslib.api.decoder
 import opuslib.api.encoder
 import opuslib.api.ctl
 import opuslib.constants
+
+__author__ = 'Никита Кузнецов <self@svartalf.info>'
+__copyright__ = 'Copyright (c) 2012, SvartalF'
+__license__ = 'BSD 3-Clause License'
 
 
 class Decoder(object):
@@ -93,9 +92,9 @@ class Encoder(object):
             channels : number of channels
         """
 
-        if application in opuslib.constants.APPLICATION_TYPES_MAP.keys():
+        if application in list(opuslib.constants.APPLICATION_TYPES_MAP.keys()):
             application = opuslib.constants.APPLICATION_TYPES_MAP[application]
-        elif application in opuslib.constants.APPLICATION_TYPES_MAP.values():
+        elif application in list(opuslib.constants.APPLICATION_TYPES_MAP.values()):
             pass  # Nothing to do here
         else:
             raise ValueError(

@@ -3,12 +3,11 @@
 
 """OpusLib constants."""
 
+import opuslib
+
 __author__ = 'Никита Кузнецов <self@svartalf.info>'
 __copyright__ = 'Copyright (c) 2012, SvartalF'
 __license__ = 'BSD 3-Clause License'
-
-
-import opuslib
 
 
 APPLICATION_TYPES_MAP = {
