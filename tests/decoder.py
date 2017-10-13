@@ -47,9 +47,9 @@ class DecoderTest(unittest.TestCase):
                 if i == -5:
                     fs = -8000
                 elif i == -6:
-                    fs = sys.maxint  # TODO: should be a INT32_MAX
+                    fs = sys.maxsize  # TODO: should be a INT32_MAX
                 elif i == -7:
-                    fs = -1*(sys.maxint-1)  # Emulation of the INT32_MIN
+                    fs = -1 * (sys.maxsize - 1)  # Emulation of the INT32_MIN
                 else:
                     fs = i
 
