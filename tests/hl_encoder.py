@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
+#
 
 """Tests for a high-level Decoder object"""
 
@@ -22,6 +24,7 @@ class EncoderTest(unittest.TestCase):
 
         opuslib.Encoder(48000, 2, opuslib.APPLICATION_AUDIO)
 
-    def test_reset_state(self):
+    @classmethod
+    def test_reset_state(cls):
         encoder = opuslib.Encoder(48000, 2, opuslib.APPLICATION_AUDIO)
         encoder.reset_state()

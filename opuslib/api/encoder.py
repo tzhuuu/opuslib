@@ -8,6 +8,7 @@ CTypes mapping between libopus functions and Python.
 """
 
 import ctypes  # type: ignore
+import typing
 
 import opuslib
 import opuslib.api
@@ -32,7 +33,8 @@ libopus_get_size.argtypes = (ctypes.c_int,)  # must be sequence (,) of types!
 libopus_get_size.restype = ctypes.c_int
 
 
-def get_size(channels: int) -> int:
+# FIXME: Remove typing.Any once we have a stub for ctypes
+def get_size(channels: int) -> typing.Union[int, typing.Any]:
     """Gets the size of an OpusEncoder structure."""
     if channels not in (1, 2):
         raise ValueError('Wrong channels value. Must be equal to 1 or 2')
@@ -70,10 +72,15 @@ libopus_ctl = opuslib.api.libopus.opus_encoder_ctl
 libopus_ctl.restype = ctypes.c_int
 
 
-def encoder_ctl(encoder, request, value=None):
+# FIXME: Remove typing.Any once we have a stub for ctypes
+def encoder_ctl(
+        encoder_state: ctypes.Structure,
+        request,
+        value=None
+) -> typing.Union[int, typing.Any]:
     if value is not None:
-        return request(libopus_ctl, encoder, value)
-    return request(libopus_ctl, encoder)
+        return request(libopus_ctl, encoder_state, value)
+    return request(libopus_ctl, encoder_state)
 
 
 libopus_encode = opuslib.api.libopus.opus_encode
@@ -87,8 +94,13 @@ libopus_encode.argtypes = (
 libopus_encode.restype = ctypes.c_int32
 
 
-def encode(encoder, pcm_data: int, frame_size: int,
-           max_data_bytes: int) -> bytearray:
+# FIXME: Remove typing.Any once we have a stub for ctypes
+def encode(
+        encoder_state: ctypes.Structure,
+        pcm_data: bytearray,
+        frame_size: int,
+        max_data_bytes: int
+) -> typing.Union[bytearray, typing.Any]:
     """
     Encodes an Opus Frame.
 
@@ -115,7 +127,7 @@ def encode(encoder, pcm_data: int, frame_size: int,
     opus_data = (ctypes.c_char * max_data_bytes)()
 
     result = libopus_encode(
-        encoder,
+        encoder_state,
         pcm_pointer,
         frame_size,
         opus_data,
@@ -140,8 +152,13 @@ libopus_encode_float.argtypes = (
 libopus_encode_float.restype = ctypes.c_int32
 
 
-def encode_float(encoder_state, pcm_data: float, frame_size: int,
-                 max_data_bytes) -> bytearray:
+# FIXME: Remove typing.Any once we have a stub for ctypes
+def encode_float(
+        encoder_state: ctypes.Structure,
+        pcm_data: bytearray,
+        frame_size: int,
+        max_data_bytes: int
+) -> typing.Union[bytearray, typing.Any]:
     """Encodes an Opus frame from floating point input"""
     pcm_pointer = ctypes.cast(pcm_data, opuslib.api.c_float_pointer)
     opus_data = (ctypes.c_char * max_data_bytes)()

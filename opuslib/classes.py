@@ -3,6 +3,8 @@
 
 """High-level interface to a Opus decoder functions"""
 
+import typing
+
 import opuslib
 import opuslib.api
 import opuslib.api.ctl
@@ -41,8 +43,13 @@ class Decoder(object):
             opuslib.api.ctl.reset_state
         )
 
-    def decode(self, opus_data: str, frame_size: int,
-               decode_fec: bool = False) -> bytearray:
+    # FIXME: Remove typing.Any once we have a stub for ctypes
+    def decode(
+            self,
+            opus_data: bytearray,
+            frame_size: int,
+            decode_fec: bool = False
+        ) -> typing.Union[bytearray, typing.Any]:
         """
         Decodes given Opus data to PCM.
         """
@@ -55,8 +62,13 @@ class Decoder(object):
             channels=self._channels
         )
 
-    def decode_float(self, opus_data: str, frame_size,
-                     decode_fec: bool = False) -> bytearray:
+    # FIXME: Remove typing.Any once we have a stub for ctypes
+    def decode_float(
+            self,
+            opus_data: bytearray,
+            frame_size: int,
+            decode_fec: bool = False
+        ) -> typing.Union[bytearray, typing.Any]:
         """
         Decodes given Opus data to PCM.
         """
@@ -121,6 +133,8 @@ class Decoder(object):
 
 class Encoder(object):
 
+    """High-Level Encoder Object."""
+
     def __init__(self, fs, channels, application) -> None:
         """
         Parameters:
@@ -155,7 +169,10 @@ class Encoder(object):
         opuslib.api.encoder.encoder_ctl(
             self.encoder_state, opuslib.api.ctl.reset_state)
 
-    def encode(self, pcm_data: int, frame_size: int) -> bytearray:
+    def encode(self, pcm_data: bytearray, frame_size: int) -> bytearray:
+        """
+        Encodes given PCM data as Opus.
+        """
         return opuslib.api.encoder.encode(
             self.encoder_state,
             pcm_data,
@@ -163,10 +180,16 @@ class Encoder(object):
             len(pcm_data)
         )
 
-    def encode_float(self, data, frame_size,
-                     decode_fec: bool = False) -> bytearray:
+    def encode_float(self, pcm_data: bytearray, frame_size: int) -> bytearray:
+        """
+        Encodes given PCM data as Opus.
+        """
         return opuslib.api.encoder.encode_float(
-            self.encoder_state, data, frame_size, len(data))
+            self.encoder_state,
+            pcm_data,
+            frame_size,
+            len(pcm_data)
+        )
 
     # CTL interfaces
 

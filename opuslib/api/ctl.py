@@ -6,11 +6,11 @@
 
 Usage example:
 
-    from opus.api import decoder, ctl
-
-    dec = decoder.create(48000, 2)
-    decoder.ctl(dec, ctl.set_gain, -15)
-    gain_value = decoder.ctl(dec, ctl.get_gain)
+>>> import opuslib.api.decoder
+>>> import opuslib.api.ctl
+>>> dec = opuslib.api.decoder.create_state(48000, 2)
+>>> opuslib.api.decoder.decoder_ctl(dec, opuslib.api.ctl.set_gain, -15)
+>>> gain_value = opuslib.api.decoder.decoder_ctl(dec, opuslib.api.ctl.get_gain)
 
 """
 
@@ -26,7 +26,9 @@ import opuslib.exceptions
 
 
 def query(request):
+
     """Query encoder/decoder with a request value"""
+
     def inner(func, obj):
         result_code = func(obj, request)
 
@@ -39,7 +41,9 @@ def query(request):
 
 
 def get(request, result_type):
+
     """Get CTL value from a encoder/decoder"""
+
     def inner(func, obj):
         result = result_type()
         result_code = func(obj, request, ctypes.byref(result))
@@ -53,7 +57,9 @@ def get(request, result_type):
 
 
 def ctl_set(request):
+
     """Set new CTL value to a encoder/decoder"""
+
     def inner(func, obj, value):
         result_code = func(obj, request, value)
         if result_code is not opuslib.OK:

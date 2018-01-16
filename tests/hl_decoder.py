@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
+#
 
 """Tests for a high-level Decoder object"""
 
@@ -46,42 +48,43 @@ class DecoderTest(unittest.TestCase):
 
         try:
             decoder.gain = -32769
-        except opuslib.OpusError as ex:
-            self.assertEqual(ex.code, opuslib.BAD_ARG)
+        except opuslib.OpusError as exc:
+            self.assertEqual(exc.code, opuslib.BAD_ARG)
 
         try:
             decoder.gain = 32768
-        except opuslib.OpusError as ex:
-            self.assertEqual(ex.code, opuslib.BAD_ARG)
+        except opuslib.OpusError as exc:
+            self.assertEqual(exc.code, opuslib.BAD_ARG)
 
         decoder.gain = -15
         self.assertEqual(decoder.gain, -15)
 
-    def test_reset_state(self):
+    @classmethod
+    def test_reset_state(cls):
         decoder = opuslib.Decoder(48000, 2)
         decoder.reset_state()
 
     def test_decode(self):
         decoder = opuslib.Decoder(48000, 2)
         packet = bytes([255, 49])
-        for j in range(2, 51):
+        for _ in range(2, 51):
             packet += bytes([0])
 
         try:
             decoder.decode(packet, frame_size=960)
-        except opuslib.OpusError as ex:
-            self.assertEqual(ex.code, opuslib.INVALID_PACKET)
+        except opuslib.OpusError as exc:
+            self.assertEqual(exc.code, opuslib.INVALID_PACKET)
 
         packet = bytes([252, 0, 0])
         try:
             decoder.decode(packet, frame_size=60)
-        except opuslib.OpusError as ex:
-            self.assertEqual(ex.code, opuslib.BUFFER_TOO_SMALL)
+        except opuslib.OpusError as exc:
+            self.assertEqual(exc.code, opuslib.BUFFER_TOO_SMALL)
 
         try:
             decoder.decode(packet, frame_size=480)
-        except opuslib.OpusError as e:
-            self.assertEqual(e.code, opuslib.BUFFER_TOO_SMALL)
+        except opuslib.OpusError as exc:
+            self.assertEqual(exc.code, opuslib.BUFFER_TOO_SMALL)
 
         try:
             decoder.decode(packet, frame_size=960)
