@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import opuslib.api
+import opuslib.api.info
 
 __author__ = 'Никита Кузнецов <self@svartalf.info>'
 __copyright__ = 'Copyright (c) 2012, SvartalF'
@@ -10,8 +10,9 @@ __license__ = 'BSD 3-Clause License'
 
 class OpusError(Exception):
 
-    def __init__(self, code):
+    def __init__(self, code: int):
         self.code = code
+        super().__init__()
 
     def __str__(self):
         return opuslib.api.info.strerror(self.code)
