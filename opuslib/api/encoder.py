@@ -139,7 +139,7 @@ def encode(
         raise opuslib.OpusError(
             'Opus Encoder returned result="{}"'.format(result))
 
-    return array.array('b', pcm_pointer[:result]).tobytes()
+    return array.array('b', opus_data[:result]).tobytes()
 
 
 libopus_encode_float = opuslib.api.libopus.opus_encode_float
@@ -176,7 +176,7 @@ def encode_float(
         raise opuslib.OpusError(
             'Encoder returned result="{}"'.format(result))
 
-    return array.array('f', pcm_pointer[:result]).tobytes()
+    return array.array('b', opus_data[:result]).tobytes()
 
 
 destroy = opuslib.api.libopus.opus_encoder_destroy
