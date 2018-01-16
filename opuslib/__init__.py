@@ -16,6 +16,12 @@ Python bindings to the libopus, IETF low-delay audio codec
 
 """
 
+from .exceptions import OpusError  # NOQA
+
+from .constants import *  # NOQA
+
+from .constants import OK, APPLICATION_TYPES_MAP  # NOQA
+
 from .classes import Encoder, Decoder  # NOQA
 
 __author__ = 'Никита Кузнецов <self@svartalf.info>'
