@@ -66,6 +66,7 @@ class DecoderTest(unittest.TestCase):
 
     def test_decode(self):
         decoder = opuslib.Decoder(48000, 2)
+
         packet = bytes([255, 49])
         for _ in range(2, 51):
             packet += bytes([0])

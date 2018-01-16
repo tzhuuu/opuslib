@@ -7,6 +7,7 @@
 CTypes mapping between libopus functions and Python.
 """
 
+import array
 import ctypes  # type: ignore
 import typing
 
@@ -97,10 +98,10 @@ libopus_encode.restype = ctypes.c_int32
 # FIXME: Remove typing.Any once we have a stub for ctypes
 def encode(
         encoder_state: ctypes.Structure,
-        pcm_data: bytearray,
+        pcm_data: bytes,
         frame_size: int,
         max_data_bytes: int
-) -> typing.Union[bytearray, typing.Any]:
+) -> typing.Union[bytes, typing.Any]:
     """
     Encodes an Opus Frame.
 
@@ -138,7 +139,7 @@ def encode(
         raise opuslib.OpusError(
             'Opus Encoder returned result="{}"'.format(result))
 
-    return pcm_pointer[:result]
+    return array.array('b', pcm_pointer[:result]).tobytes()
 
 
 libopus_encode_float = opuslib.api.libopus.opus_encode_float
@@ -155,10 +156,10 @@ libopus_encode_float.restype = ctypes.c_int32
 # FIXME: Remove typing.Any once we have a stub for ctypes
 def encode_float(
         encoder_state: ctypes.Structure,
-        pcm_data: bytearray,
+        pcm_data: bytes,
         frame_size: int,
         max_data_bytes: int
-) -> typing.Union[bytearray, typing.Any]:
+) -> typing.Union[bytes, typing.Any]:
     """Encodes an Opus frame from floating point input"""
     pcm_pointer = ctypes.cast(pcm_data, opuslib.api.c_float_pointer)
     opus_data = (ctypes.c_char * max_data_bytes)()
@@ -175,7 +176,7 @@ def encode_float(
         raise opuslib.OpusError(
             'Encoder returned result="{}"'.format(result))
 
-    return pcm_pointer[:result]
+    return array.array('f', pcm_pointer[:result]).tobytes()
 
 
 destroy = opuslib.api.libopus.opus_encoder_destroy

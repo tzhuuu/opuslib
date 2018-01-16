@@ -46,10 +46,10 @@ class Decoder(object):
     # FIXME: Remove typing.Any once we have a stub for ctypes
     def decode(
             self,
-            opus_data: bytearray,
+            opus_data: bytes,
             frame_size: int,
             decode_fec: bool = False
-        ) -> typing.Union[bytearray, typing.Any]:
+        ) -> typing.Union[bytes, typing.Any]:
         """
         Decodes given Opus data to PCM.
         """
@@ -65,10 +65,10 @@ class Decoder(object):
     # FIXME: Remove typing.Any once we have a stub for ctypes
     def decode_float(
             self,
-            opus_data: bytearray,
+            opus_data: bytes,
             frame_size: int,
             decode_fec: bool = False
-        ) -> typing.Union[bytearray, typing.Any]:
+        ) -> typing.Union[bytes, typing.Any]:
         """
         Decodes given Opus data to PCM.
         """
@@ -169,7 +169,7 @@ class Encoder(object):
         opuslib.api.encoder.encoder_ctl(
             self.encoder_state, opuslib.api.ctl.reset_state)
 
-    def encode(self, pcm_data: bytearray, frame_size: int) -> bytearray:
+    def encode(self, pcm_data: bytes, frame_size: int) -> bytes:
         """
         Encodes given PCM data as Opus.
         """
@@ -180,7 +180,7 @@ class Encoder(object):
             len(pcm_data)
         )
 
-    def encode_float(self, pcm_data: bytearray, frame_size: int) -> bytearray:
+    def encode_float(self, pcm_data: bytes, frame_size: int) -> bytes:
         """
         Encodes given PCM data as Opus.
         """

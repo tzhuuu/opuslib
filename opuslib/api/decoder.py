@@ -7,6 +7,7 @@
 CTypes mapping between libopus functions and Python.
 """
 
+import array
 import ctypes  # type: ignore
 import typing
 
@@ -82,7 +83,7 @@ libopus_packet_get_bandwidth.restype = ctypes.c_int
 
 
 # FIXME: Remove typing.Any once we have a stub for ctypes
-def packet_get_bandwidth(data: bytearray) -> typing.Union[int, typing.Any]:
+def packet_get_bandwidth(data: bytes) -> typing.Union[int, typing.Any]:
     """Gets the bandwidth of an Opus packet."""
     data_pointer = ctypes.c_char_p(data)
 
@@ -101,7 +102,7 @@ libopus_packet_get_nb_channels.restype = ctypes.c_int
 
 
 # FIXME: Remove typing.Any once we have a stub for ctypes
-def packet_get_nb_channels(data: bytearray) -> typing.Union[int, typing.Any]:
+def packet_get_nb_channels(data: bytes) -> typing.Union[int, typing.Any]:
     """Gets the number of channels from an Opus packet"""
     data_pointer = ctypes.c_char_p(data)
 
@@ -120,7 +121,7 @@ libopus_packet_get_nb_frames.restype = ctypes.c_int
 
 # FIXME: Remove typing.Any once we have a stub for ctypes
 def packet_get_nb_frames(
-        data: bytearray,
+        data: bytes,
         length: typing.Optional[int] = None
 ) -> typing.Union[int, typing.Any]:
     """Gets the number of frames in an Opus packet"""
@@ -145,7 +146,7 @@ libopus_packet_get_samples_per_frame.restype = ctypes.c_int
 
 # FIXME: Remove typing.Any once we have a stub for ctypes
 def packet_get_samples_per_frame(
-        data: bytearray,
+        data: bytes,
         fs: int
 ) -> typing.Union[int, typing.Any]:
     """Gets the number of samples per frame from an Opus packet"""
@@ -171,7 +172,7 @@ libopus_get_nb_samples.restype = ctypes.c_int
 # FIXME: Remove typing.Any once we have a stub for ctypes
 def get_nb_samples(
         decoder_state: ctypes.Structure,
-        packet: bytearray,
+        packet: bytes,
         length: int
 ) -> typing.Union[int, typing.Any]:
     """
@@ -213,12 +214,12 @@ libopus_decode.restype = ctypes.c_int
 # FIXME: Remove typing.Any once we have a stub for ctypes
 def decode(  # pylint: disable=too-many-arguments
         decoder_state: ctypes.Structure,
-        opus_data: bytearray,
+        opus_data: bytes,
         length: int,
         frame_size: int,
         decode_fec: bool,
         channels: int = 2
-) -> typing.Union[int, typing.Any]:
+) -> typing.Union[bytes, typing.Any]:
     """
     Decode an Opus Frame to PCM.
 
@@ -244,7 +245,7 @@ def decode(  # pylint: disable=too-many-arguments
     if result < 0:
         raise opuslib.exceptions.OpusError(result)
 
-    return pcm_pointer[:result * channels]
+    return array.array('h', pcm_pointer[:result * channels]).tobytes()
 
 
 libopus_decode_float = opuslib.api.libopus.opus_decode_float
@@ -262,12 +263,12 @@ libopus_decode_float.restype = ctypes.c_int
 # FIXME: Remove typing.Any once we have a stub for ctypes
 def decode_float(  # pylint: disable=too-many-arguments
         decoder_state: ctypes.Structure,
-        opus_data: bytearray,
+        opus_data: bytes,
         length: int,
         frame_size: int,
         decode_fec: bool,
         channels: int = 2
-) -> typing.Union[int, typing.Any]:
+) -> typing.Union[bytes, typing.Any]:
     """
     Decode an Opus Frame.
 
@@ -292,7 +293,7 @@ def decode_float(  # pylint: disable=too-many-arguments
     if result < 0:
         raise opuslib.exceptions.OpusError(result)
 
-    return pcm_pointer[:result * channels]
+    return array.array('f', pcm[:result * channels]).tobytes()
 
 
 libopus_ctl = opuslib.api.libopus.opus_decoder_ctl

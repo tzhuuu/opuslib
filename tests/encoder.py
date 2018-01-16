@@ -3,7 +3,7 @@
 # pylint: disable=missing-docstring
 #
 
-import ctypes
+import ctypes  # type: ignore
 import sys
 import unittest
 
