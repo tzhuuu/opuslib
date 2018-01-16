@@ -1,21 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
+#
+
+import ctypes  # type: ignore
+import sys
+import unittest
+
+import opuslib.api
+import opuslib.api.encoder
+import opuslib.api.ctl
 
 __author__ = 'Никита Кузнецов <self@svartalf.info>'
 __copyright__ = 'Copyright (c) 2012, SvartalF'
 __license__ = 'BSD 3-Clause License'
-
-
-import ctypes
-import sys
-
-try:
-    import unittest2 as unittest  # For Python<=2.6
-except ImportError:
-    import unittest
-
-from opuslib.api import encoder, constants, ctl
-from opuslib.exceptions import OpusError
 
 
 class EncoderTest(unittest.TestCase):
@@ -25,172 +23,283 @@ class EncoderTest(unittest.TestCase):
     """
 
     def _test_unsupported_sample_rates(self):
-        for c in range(0, 4):
-            for i in range(-7, 96000+1):
+        for cxx in range(0, 4):
+            for ixx in range(-7, 96000 + 1):
 
-                if i in (8000, 12000, 16000, 24000, 48000) and c in (1, 2):
+                if ixx in (8000, 12000, 16000, 24000, 48000) and cxx in (1, 2):
                     continue
 
-                if i == -5:
-                    fs = -8000
-                elif i == -6:
-                    fs = sys.maxsize  # TODO: Must be an INT32_MAX
-                elif i == -7:
-                    fs = -1 * (sys.maxsize - 1)  # TODO: Must be an INT32_MIN
+                if ixx == -5:
+                    fsx = -8000
+                elif ixx == -6:
+                    fsx = sys.maxsize  # TODO: Must be an INT32_MAX
+                elif ixx == -7:
+                    fsx = -1 * (sys.maxsize - 1)  # TODO: Must be an INT32_MIN
                 else:
-                    fs = i
+                    fsx = ixx
 
                 try:
-                    encoder.create(fs, c, constants.APPLICATION_VOIP)
-                except OpusError as e:
-                    self.assertEqual(e.code, constants.BAD_ARG)
+                    opuslib.api.encoder.create_state(
+                        fsx, cxx, opuslib.APPLICATION_VOIP)
+                except opuslib.OpusError as exc:
+                    self.assertEqual(exc.code, opuslib.BAD_ARG)
 
     def test_create(self):
         try:
-            encoder.create(48000, 2, constants.AUTO)
-        except OpusError as e:
-            self.assertEqual(e.code, constants.BAD_ARG)
+            opuslib.api.encoder.create_state(48000, 2, opuslib.AUTO)
+        except opuslib.OpusError as exc:
+            self.assertEqual(exc.code, opuslib.BAD_ARG)
 
-        enc = encoder.create(48000, 2, constants.APPLICATION_VOIP)
-        encoder.destroy(enc)
+        enc = opuslib.api.encoder.create_state(
+            48000, 2, opuslib.APPLICATION_VOIP)
+        opuslib.api.encoder.destroy(enc)
 
-        enc = encoder.create(48000, 2, constants.APPLICATION_RESTRICTED_LOWDELAY)
-        i = encoder.ctl(enc, ctl.get_lookahead)
+        enc = opuslib.api.encoder.create_state(
+            48000, 2, opuslib.APPLICATION_RESTRICTED_LOWDELAY)
         # TODO: rewrite that code
+        # i = opuslib.api.encoder.encoder_ctl(
+        #     enc, opuslib.api.ctl.get_lookahead)
         # if(err!=OPUS_OK || i<0 || i>32766)test_failed();
-        encoder.destroy(enc)
+        opuslib.api.encoder.destroy(enc)
 
-        enc = encoder.create(48000, 2, constants.APPLICATION_AUDIO)
-        i = encoder.ctl(enc, ctl.get_lookahead)
+        enc = opuslib.api.encoder.create_state(
+            48000, 2, opuslib.APPLICATION_AUDIO)
         # TODO: rewrite that code
+        # i = opuslib.api.encoder.encoder_ctl(
+        #     enc, opuslib.api.ctl.get_lookahead)
         # err=opus_encoder_ctl(enc,OPUS_GET_LOOKAHEAD(&i));
         # if(err!=OPUS_OK || i<0 || i>32766)test_failed();
-        encoder.destroy(enc)
+        opuslib.api.encoder.destroy(enc)
 
-    def test_encode(self):
-        enc = encoder.create(48000, 2, constants.APPLICATION_AUDIO)
-        data = chr(0)*ctypes.sizeof(ctypes.c_short)*2*960
-        encoder.encode(enc, data, 960, len(data))
-        encoder.destroy(enc)
+    @classmethod
+    def test_encode(cls):
+        enc = opuslib.api.encoder.create_state(
+            48000, 2, opuslib.APPLICATION_AUDIO)
+        data = chr(0) * ctypes.sizeof(ctypes.c_short) * 2 * 960
+        opuslib.api.encoder.encode(enc, data, 960, len(data))
+        opuslib.api.encoder.destroy(enc)
 
-    def test_encode_float(self):
-        enc = encoder.create(48000, 2, constants.APPLICATION_AUDIO)
-        data = chr(0)*ctypes.sizeof(ctypes.c_float)*2*960
-        encoder.encode_float(enc, data, 960, len(data))
-        encoder.destroy(enc)
+    @classmethod
+    def test_encode_float(cls):
+        enc = opuslib.api.encoder.create_state(
+            48000, 2, opuslib.APPLICATION_AUDIO)
+        data = chr(0) * ctypes.sizeof(ctypes.c_float) * 2 * 960
+        opuslib.api.encoder.encode_float(enc, data, 960, len(data))
+        opuslib.api.encoder.destroy(enc)
 
     def test_unimplemented(self):
-        enc = encoder.create(48000, 2, constants.APPLICATION_AUDIO)
+        enc = opuslib.api.encoder.create_state(
+            48000, 2, opuslib.APPLICATION_AUDIO)
         try:
-            encoder.ctl(enc, ctl.unimplemented)
-        except OpusError as e:
-            self.assertEqual(e.code, constants.UNIMPLEMENTED)
+            opuslib.api.encoder.encoder_ctl(enc, opuslib.api.ctl.unimplemented)
+        except opuslib.OpusError as exc:
+            self.assertEqual(exc.code, opuslib.UNIMPLEMENTED)
 
-        encoder.destroy(enc)
+        opuslib.api.encoder.destroy(enc)
 
     def test_application(self):
-        self.check_setget(ctl.set_application, ctl.get_application, (-1, constants.AUTO),
-            (constants.APPLICATION_AUDIO, constants.APPLICATION_RESTRICTED_LOWDELAY))
+        self.check_setget(
+            opuslib.api.ctl.set_application,
+            opuslib.api.ctl.get_application,
+            (-1, opuslib.AUTO),
+            (opuslib.APPLICATION_AUDIO,
+             opuslib.APPLICATION_RESTRICTED_LOWDELAY)
+        )
 
     def test_bitrate(self):
-        enc = encoder.create(48000, 2, constants.APPLICATION_AUDIO)
+        enc = opuslib.api.encoder.create_state(
+            48000, 2, opuslib.APPLICATION_AUDIO)
 
-        encoder.ctl(enc, ctl.set_bitrate, 1073741832)
+        opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.set_bitrate, 1073741832)
 
-        value = encoder.ctl(enc, ctl.get_bitrate)
+        value = opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.get_bitrate)
         self.assertLess(value, 700000)
         self.assertGreater(value, 256000)
 
-        encoder.destroy(enc)
+        opuslib.api.encoder.destroy(enc)
 
-        self.check_setget(ctl.set_bitrate, ctl.get_bitrate, (-12345, 0), (500, 256000))
+        self.check_setget(
+            opuslib.api.ctl.set_bitrate,
+            opuslib.api.ctl.get_bitrate,
+            (-12345, 0),
+            (500, 256000)
+        )
 
     def test_force_channels(self):
-        self.check_setget(ctl.set_force_channels, ctl.get_force_channels, (-1, 3), (1, constants.AUTO))
+        self.check_setget(
+            opuslib.api.ctl.set_force_channels,
+            opuslib.api.ctl.get_force_channels,
+            (-1, 3),
+            (1, opuslib.AUTO)
+        )
 
     def test_bandwidth(self):
-        enc = encoder.create(48000, 2, constants.APPLICATION_AUDIO)
+        enc = opuslib.api.encoder.create_state(
+            48000, 2, opuslib.APPLICATION_AUDIO)
 
         # Set bandwidth
-        i = -2
-        self.assertRaises(OpusError, lambda: encoder.ctl(enc, ctl.set_bandwidth, i))
-        i = constants.BANDWIDTH_FULLBAND+1
-        self.assertRaises(OpusError, lambda: encoder.ctl(enc, ctl.set_bandwidth, i))
-        i = constants.BANDWIDTH_NARROWBAND
-        encoder.ctl(enc, ctl.set_bandwidth, i)
-        i = constants.BANDWIDTH_FULLBAND
-        encoder.ctl(enc, ctl.set_bandwidth, i)
-        i = constants.BANDWIDTH_WIDEBAND
-        encoder.ctl(enc, ctl.set_bandwidth, i)
-        i = constants.BANDWIDTH_MEDIUMBAND
-        encoder.ctl(enc, ctl.set_bandwidth, i)
+        ixx = -2
+        self.assertRaises(
+            opuslib.OpusError,
+            lambda: opuslib.api.encoder.encoder_ctl(
+                enc, opuslib.api.ctl.set_bandwidth, ixx)
+        )
+
+        ix1 = opuslib.BANDWIDTH_FULLBAND + 1
+        self.assertRaises(
+            opuslib.OpusError,
+            lambda: opuslib.api.encoder.encoder_ctl(
+                enc, opuslib.api.ctl.set_bandwidth, ix1)
+        )
+
+        ix2 = opuslib.BANDWIDTH_NARROWBAND
+        opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.set_bandwidth, ix2)
+
+        ix3 = opuslib.BANDWIDTH_FULLBAND
+        opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.set_bandwidth, ix3)
+
+        ix4 = opuslib.BANDWIDTH_WIDEBAND
+        opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.set_bandwidth, ix4)
+
+        ix5 = opuslib.BANDWIDTH_MEDIUMBAND
+        opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.set_bandwidth, ix5)
 
         # Get bandwidth
-        i = -12345
-        value = encoder.ctl(enc, ctl.get_bandwidth)
-        self.assertIn(value, (constants.BANDWIDTH_FULLBAND, constants.BANDWIDTH_MEDIUMBAND, constants.BANDWIDTH_WIDEBAND,
-            constants.BANDWIDTH_NARROWBAND, constants.AUTO))
+        value = opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.get_bandwidth)
+        self.assertIn(
+            value,
+            (opuslib.BANDWIDTH_FULLBAND,
+             opuslib.BANDWIDTH_MEDIUMBAND,
+             opuslib.BANDWIDTH_WIDEBAND,
+             opuslib.BANDWIDTH_NARROWBAND,
+             opuslib.AUTO)
+        )
 
-        encoder.ctl(enc, ctl.set_bandwidth, constants.AUTO)
+        opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.set_bandwidth, opuslib.AUTO)
 
-        encoder.destroy(enc)
+        opuslib.api.encoder.destroy(enc)
 
     def test_max_bandwidth(self):
-        enc = encoder.create(48000, 2, constants.APPLICATION_AUDIO)
+        enc = opuslib.api.encoder.create_state(
+            48000, 2, opuslib.APPLICATION_AUDIO)
 
         i = -2
-        self.assertRaises(OpusError, lambda: encoder.ctl(enc, ctl.set_max_bandwidth, i))
-        i = constants.BANDWIDTH_FULLBAND+1
-        self.assertRaises(OpusError, lambda: encoder.ctl(enc, ctl.set_max_bandwidth, i))
-        i = constants.BANDWIDTH_NARROWBAND
-        encoder.ctl(enc, ctl.set_max_bandwidth, i)
-        i = constants.BANDWIDTH_FULLBAND
-        encoder.ctl(enc, ctl.set_max_bandwidth, i)
-        i = constants.BANDWIDTH_WIDEBAND
-        encoder.ctl(enc, ctl.set_max_bandwidth, i)
-        i = constants.BANDWIDTH_MEDIUMBAND
-        encoder.ctl(enc, ctl.set_max_bandwidth, i)
+        self.assertRaises(
+            opuslib.OpusError,
+            lambda: opuslib.api.encoder.encoder_ctl(
+                enc, opuslib.api.ctl.set_max_bandwidth, i)
+        )
+        i = opuslib.BANDWIDTH_FULLBAND + 1
+        self.assertRaises(
+            opuslib.OpusError,
+            lambda: opuslib.api.encoder.encoder_ctl(
+                enc, opuslib.api.ctl.set_max_bandwidth, i)
+        )
+        i = opuslib.BANDWIDTH_NARROWBAND
+        opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.set_max_bandwidth, i)
+        i = opuslib.BANDWIDTH_FULLBAND
+        opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.set_max_bandwidth, i)
+        i = opuslib.BANDWIDTH_WIDEBAND
+        opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.set_max_bandwidth, i)
+        i = opuslib.BANDWIDTH_MEDIUMBAND
+        opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.set_max_bandwidth, i)
 
         i = -12345
-        value = encoder.ctl(enc, ctl.get_max_bandwidth)
-        self.assertIn(value, (constants.BANDWIDTH_FULLBAND, constants.BANDWIDTH_MEDIUMBAND, constants.BANDWIDTH_WIDEBAND,
-            constants.BANDWIDTH_NARROWBAND, constants.AUTO))
+        value = opuslib.api.encoder.encoder_ctl(
+            enc, opuslib.api.ctl.get_max_bandwidth)
 
-        encoder.destroy(enc)
+        self.assertIn(
+            value,
+            (opuslib.BANDWIDTH_FULLBAND,
+             opuslib.BANDWIDTH_MEDIUMBAND,
+             opuslib.BANDWIDTH_WIDEBAND,
+             opuslib.BANDWIDTH_NARROWBAND,
+             opuslib.AUTO)
+        )
+
+        opuslib.api.encoder.destroy(enc)
 
     def test_dtx(self):
-        self.check_setget(ctl.set_dtx, ctl.get_dtx, (-1, 2), (1, 0))
+        self.check_setget(
+            opuslib.api.ctl.set_dtx, opuslib.api.ctl.get_dtx, (-1, 2), (1, 0))
 
     def test_complexity(self):
-        self.check_setget(ctl.set_complexity, ctl.get_complexity, (-1, 11), (0, 10))
+        self.check_setget(
+            opuslib.api.ctl.set_complexity,
+            opuslib.api.ctl.get_complexity,
+            (-1, 11),
+            (0, 10)
+        )
 
     def test_inband_fec(self):
-        self.check_setget(ctl.set_inband_fec, ctl.get_inband_fec, (-1, 2), (1, 0))
+        self.check_setget(
+            opuslib.api.ctl.set_inband_fec,
+            opuslib.api.ctl.get_inband_fec,
+            (-1, 2),
+            (1, 0)
+        )
 
     def test_packet_loss_perc(self):
-        self.check_setget(ctl.set_packet_loss_perc, ctl.get_packet_loss_perc, (-1, 101), (100, 0))
+        self.check_setget(
+            opuslib.api.ctl.set_packet_loss_perc,
+            opuslib.api.ctl.get_packet_loss_perc,
+            (-1, 101),
+            (100, 0)
+        )
 
     def test_vbr(self):
-        self.check_setget(ctl.set_vbr, ctl.get_vbr, (-1, 2), (1, 0))
+        self.check_setget(
+            opuslib.api.ctl.set_vbr, opuslib.api.ctl.get_vbr, (-1, 2), (1, 0))
 
     def test_vbr_constraint(self):
-        self.check_setget(ctl.set_vbr_constraint, ctl.get_vbr_constraint, (-1, 2), (1, 0))
+        self.check_setget(
+            opuslib.api.ctl.set_vbr_constraint,
+            opuslib.api.ctl.get_vbr_constraint,
+            (-1, 2),
+            (1, 0)
+        )
 
     def test_signal(self):
-        self.check_setget(ctl.set_signal, ctl.get_signal, (-12345, 0x7FFFFFFF), (constants.SIGNAL_MUSIC, constants.AUTO))
+        self.check_setget(
+            opuslib.api.ctl.set_signal,
+            opuslib.api.ctl.get_signal,
+            (-12345, 0x7FFFFFFF),
+            (opuslib.SIGNAL_MUSIC, opuslib.AUTO)
+        )
 
     def test_lsb_depth(self):
-        self.check_setget(ctl.set_lsb_depth, ctl.get_lsb_depth, (7, 25), (16, 24))
+        self.check_setget(
+            opuslib.api.ctl.set_lsb_depth,
+            opuslib.api.ctl.get_lsb_depth,
+            (7, 25),
+            (16, 24)
+        )
 
-    def check_setget(self, set, get, bad, good):
-        enc = encoder.create(48000, 2, constants.APPLICATION_AUDIO)
+    def check_setget(self, v_set, v_get, bad, good):
+        enc = opuslib.api.encoder.create_state(
+            48000, 2, opuslib.APPLICATION_AUDIO)
 
         for value in bad:
-            self.assertRaises(OpusError, lambda: encoder.ctl(enc, set, value))
+            self.assertRaises(
+                opuslib.OpusError,
+                lambda: opuslib.api.encoder.encoder_ctl(enc, v_set, value)
+            )
 
-        for value in good:
-            encoder.ctl(enc, set, value)
-            result = encoder.ctl(enc, get)
-            self.assertEqual(value, result)
+        for valuex in good:
+            opuslib.api.encoder.encoder_ctl(enc, v_set, valuex)
+            result = opuslib.api.encoder.encoder_ctl(enc, v_get)
+            self.assertEqual(valuex, result)
 
-        encoder.destroy(enc)
+        opuslib.api.encoder.destroy(enc)

@@ -3,29 +3,16 @@
 
 """OpusLib Package."""
 
-import os
-import setuptools
-import sys
+import setuptools  # type: ignore
 
 __author__ = 'Никита Кузнецов <self@svartalf.info>'
 __copyright__ = 'Copyright (c) 2012, SvartalF'
 __license__ = 'BSD 3-Clause License'
 
 
-def publish():
-    """Function for publishing package to pypi."""
-    if sys.argv[-1] == 'publish':
-        os.system('python setup.py sdist')
-        os.system('twine upload dist/*')
-        sys.exit()
-
-
-publish()
-
-
 setuptools.setup(
     name='opuslib',
-    version='2.0.0',
+    version='3.0.0',
     author='Никита Кузнецов',
     author_email='self@svartalf.info',
     maintainer='Orion Labs, Inc.',

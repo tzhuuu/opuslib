@@ -37,7 +37,7 @@ clean:
 		test-result.xml htmlcov fab.log *.deb .coverage
 
 publish:
-	python setup.py register sdist upload
+	python setup.py publish
 
 nosetests: remember_test
 	python setup.py nosetests
@@ -54,7 +54,13 @@ lint: remember_test
 	pylint --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" \
 	-r n opuslib/*.py opuslib/api/*.py tests/*.py || exit 0
 
-test: lint flake8 nosetests
+test: lint pep8 mypy nosetests
+
+mypy:
+	mypy --strict .
+
+docker_build:
+	docker build .
 
 checkmetadata:
-	python setup.py check -s --restructuredtext
+	python setup.py check -s --metadata --restructuredtext
