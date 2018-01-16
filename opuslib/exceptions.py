@@ -26,4 +26,4 @@ class OpusError(Exception):
 
     # FIXME: Remove typing.Any once we have a stub for ctypes
     def __str__(self) -> typing.Union[str, typing.Any]:
-        return opuslib.api.info.strerror(self.code)
+        return str(opuslib.api.info.strerror(self.code))
