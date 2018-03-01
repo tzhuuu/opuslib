@@ -12,7 +12,7 @@ __license__ = 'BSD 3-Clause License'
 
 setuptools.setup(
     name='opuslib',
-    version='3.0.1',
+    version='3.0.2',
     author='Никита Кузнецов',
     author_email='self@svartalf.info',
     maintainer='Orion Labs, Inc.',
@@ -33,9 +33,7 @@ setuptools.setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.5',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries',
         'Topic :: Multimedia :: Sound/Audio :: Conversion',
     ),
