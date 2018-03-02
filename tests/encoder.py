@@ -75,7 +75,7 @@ class EncoderTest(unittest.TestCase):
     def test_encode(cls):
         enc = opuslib.api.encoder.create_state(
             48000, 2, opuslib.APPLICATION_AUDIO)
-        data = chr(0) * ctypes.sizeof(ctypes.c_short) * 2 * 960
+        data = b'\x00' * ctypes.sizeof(ctypes.c_short) * 2 * 960
         opuslib.api.encoder.encode(enc, data, 960, len(data))
         opuslib.api.encoder.destroy(enc)
 
@@ -83,7 +83,7 @@ class EncoderTest(unittest.TestCase):
     def test_encode_float(cls):
         enc = opuslib.api.encoder.create_state(
             48000, 2, opuslib.APPLICATION_AUDIO)
-        data = chr(0) * ctypes.sizeof(ctypes.c_float) * 2 * 960
+        data = b'\x00' * ctypes.sizeof(ctypes.c_float) * 2 * 960
         opuslib.api.encoder.encode_float(enc, data, 960, len(data))
         opuslib.api.encoder.destroy(enc)
 
