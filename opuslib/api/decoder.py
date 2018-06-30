@@ -227,7 +227,7 @@ def decode(  # pylint: disable=too-many-arguments
     parameter `channels`, which indicates the number of channels in the frame.
     """
     _decode_fec = int(decode_fec)
-    result: int = 0
+    result = 0
 
     pcm_size = frame_size * channels * ctypes.sizeof(ctypes.c_int16)
     pcm = (ctypes.c_int16 * pcm_size)()
