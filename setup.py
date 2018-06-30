@@ -12,7 +12,7 @@ __license__ = 'BSD 3-Clause License'
 
 setuptools.setup(
     name='opuslib',
-    version='3.0.2',
+    version='3.0.3',
     author='Никита Кузнецов',
     author_email='self@svartalf.info',
     maintainer='Orion Labs, Inc.',
