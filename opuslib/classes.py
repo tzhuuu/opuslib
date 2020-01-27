@@ -318,4 +318,6 @@ class Encoder(object):
         self.encoder_state, opuslib.api.ctl.get_dtx)
 
     _set_dtx = lambda self, x: opuslib.api.encoder.encoder_ctl(
-        self.encoder_state, opuslib.api.ctl.get_dtx, x)
+        self.encoder_state, opuslib.api.ctl.set_dtx, x)
+
+    dtx = property(_get_dtx, _set_dtx)
