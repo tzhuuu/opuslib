@@ -1,3 +1,7 @@
+This particular fork is meant to be compatible on windows.
+
+
+
 python-opus
 ===========
 
